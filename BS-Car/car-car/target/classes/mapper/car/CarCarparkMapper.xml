@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.car.mapper.CarCarparkMapper">
+
+    <resultMap type="CarCarpark" id="CarCarparkResult">
+        <result property="carparkId"    column="carpark_id"    />
+        <result property="carparkName"    column="carpark_name"    />
+        <result property="address"    column="address"    />
+        <result property="photo"    column="photo"    />
+        <result property="description"    column="description"    />
+        <result property="isDisabled"    column="is_disabled"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectCarCarparkVo">
+        select carpark_id, carpark_name, address, photo, description, is_disabled, create_time, is_deleted, create_by, update_by, update_time, remark from car_carpark
+    </sql>
+
+    <select id="selectCarCarparkList" parameterType="CarCarpark" resultMap="CarCarparkResult">
+        <include refid="selectCarCarparkVo"/>
+        <where>
+            <if test="carparkName != null  and carparkName != ''"> and carpark_name like concat('%', #{carparkName}, '%')</if>
+            <if test="address != null  and address != ''"> and address like concat('%', #{address}, '%')</if>
+            <if test="isDisabled != null  and isDisabled != ''"> and is_disabled = #{isDisabled}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectCarCarparkByCarparkId" parameterType="Long" resultMap="CarCarparkResult">
+        <include refid="selectCarCarparkVo"/>
+        where carpark_id = #{carparkId}
+    </select>
+
+    <!--查询所有数据-->
+    <select id="selectAll" resultMap="CarCarparkResult">
+        <include refid="selectCarCarparkVo"></include>
+    </select>
+
+    <insert id="insertCarCarpark" parameterType="CarCarpark" useGeneratedKeys="true" keyProperty="carparkId">
+        insert into car_carpark
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carparkName != null and carparkName != ''">carpark_name,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="photo != null">photo,</if>
+            <if test="description != null">description,</if>
+            <if test="isDisabled != null">is_disabled,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="carparkName != null and carparkName != ''">#{carparkName},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="photo != null">#{photo},</if>
+            <if test="description != null">#{description},</if>
+            <if test="isDisabled != null">#{isDisabled},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCarCarpark" parameterType="CarCarpark">
+        update car_carpark
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="carparkName != null and carparkName != ''">carpark_name = #{carparkName},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="photo != null">photo = #{photo},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="isDisabled != null">is_disabled = #{isDisabled},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where carpark_id = #{carparkId}
+    </update>
+
+    <delete id="deleteCarCarparkByCarparkId" parameterType="Long">
+        delete from car_carpark where carpark_id = #{carparkId}
+    </delete>
+
+    <delete id="deleteCarCarparkByCarparkIds" parameterType="String">
+        delete from car_carpark where carpark_id in
+        <foreach item="carparkId" collection="array" open="(" separator="," close=")">
+            #{carparkId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.car.mapper.CarParkinglotMapper">
+
+    <resultMap type="CarParkinglot" id="CarParkinglotResult">
+        <result property="parkinglotId" column="parkinglot_id"/>
+        <result property="sort" column="sort"/>
+        <result property="carparkId" column="carpark_id"/>
+        <result property="photo" column="photo"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <association property="carCarpark" javaType="carCarpark"
+                     resultMap="com.lc.car.mapper.CarCarparkMapper.CarCarparkResult"/>
+    </resultMap>
+
+    <sql id="selectCarParkinglotVo">
+        select cp.*, cc.*
+        from car_parkinglot cp
+                 left join car_carpark cc on cp.carpark_id = cc.carpark_id
+    </sql>
+
+    <select id="selectCarParkinglotList" parameterType="CarParkinglot" resultMap="CarParkinglotResult">
+        <include refid="selectCarParkinglotVo"/>
+        <where>
+            <if test="sort != null ">and cp.sort = #{sort}</if>
+            <if test="carparkId != null  and carparkId != ''">and cp.carpark_id = #{carparkId}</if>
+            <if test="carCarpark != null and carCarpark.carparkName != null and carCarpark.carparkName != ''">and
+                cc.carpark_name like concat('%', #{carCarpark.carparkName}, '%')
+            </if>
+            <if test="status != null  and status != ''">and cp.status = #{status}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and cp.create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCarParkinglotByParkinglotId" parameterType="Long" resultMap="CarParkinglotResult">
+        <include refid="selectCarParkinglotVo"/>
+        where cp.parkinglot_id = #{parkinglotId}
+    </select>
+    <!--根据停车场id查询其所属的所有车位信息-->
+    <select id="getListByCarParkId" parameterType="carParkinglot" resultMap="CarParkinglotResult">
+        select sort, status, photo,parkinglot_id
+        from car_parkinglot
+        <where>
+            <if test="carparkId != null and carparkId != ''">and carpark_id = #{carparkId}</if>
+            <if test="status != null and status != ''">and status = #{status}</if>
+        </where>
+    </select>
+
+    <insert id="insertCarParkinglot" parameterType="CarParkinglot" useGeneratedKeys="true" keyProperty="parkinglotId">
+        insert into car_parkinglot
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sort != null">sort,</if>
+            <if test="carparkId != null and carparkId != ''">carpark_id,</if>
+            <if test="photo != null">photo,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sort != null">#{sort},</if>
+            <if test="carparkId != null and carparkId != ''">#{carparkId},</if>
+            <if test="photo != null">#{photo},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCarParkinglot" parameterType="CarParkinglot">
+        update car_parkinglot
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="carparkId != null and carparkId != ''">carpark_id = #{carparkId},</if>
+            <if test="photo != null">photo = #{photo},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where parkinglot_id = #{parkinglotId}
+    </update>
+
+    <delete id="deleteCarParkinglotByParkinglotId" parameterType="Long">
+        delete
+        from car_parkinglot
+        where parkinglot_id = #{parkinglotId}
+    </delete>
+
+    <delete id="deleteCarParkinglotByParkinglotIds" parameterType="String">
+        delete from car_parkinglot where parkinglot_id in
+        <foreach item="parkinglotId" collection="array" open="(" separator="," close=")">
+            #{parkinglotId}
+        </foreach>
+    </delete>
+</mapper>

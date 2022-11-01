@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/BS-Car.iml" filepath="$PROJECT_DIR$/BS-Car.iml" />
+      <module fileurl="file://$PROJECT_DIR$/car-admin/car-admin.iml" filepath="$PROJECT_DIR$/car-admin/car-admin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/car-car/car-car.iml" filepath="$PROJECT_DIR$/car-car/car-car.iml" />
+      <module fileurl="file://$PROJECT_DIR$/car-common/car-common.iml" filepath="$PROJECT_DIR$/car-common/car-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/car-framework/car-framework.iml" filepath="$PROJECT_DIR$/car-framework/car-framework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/car-system/car-system.iml" filepath="$PROJECT_DIR$/car-system/car-system.iml" />
+    </modules>
+  </component>
+</project>

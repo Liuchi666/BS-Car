@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.car.mapper.CarCarMapper">
+
+    <resultMap type="QueryCarListVo" id="CarCarResult">
+        <id property="carId" column="car_id"/>
+        <result property="carName" column="car_name" />
+        <result property="carNumber" column="car_number" />
+        <result property="carPhoto" column="car_photo" />
+        <result property="carStatus" column="car_status" />
+        <result property="userNickname" column="user_nickname" />
+        <result property="userPhone" column="user_phone" />
+        <result property="parkinglotSort" column="parkinglot_sort" />
+        <result property="carparkName" column="carpark_name" />
+    </resultMap>
+
+    <sql id="selectCarCarVo">
+        SELECT cc.car_id as car_id,
+               cc.car_name as car_name,
+               cc.car_number as car_number,
+               cc.photo as car_photo,
+               cc.status as car_status,
+               cu.nickname as user_nickname,
+               cu.phone as user_phone,
+               cp.sort as parkinglot_sort,
+               ccp.carpark_name as carpark_name
+        from car_car cc
+                 LEFT JOIN car_user cu ON cc.user_id = cu.user_id
+                 LEFT JOIN car_parkinglot cp ON cc.parkinglot_id = cp.parkinglot_id
+                 LEFT JOIN car_carpark ccp ON cp.carpark_id = ccp.carpark_id
+    </sql>
+
+    <select id="selectCarCarList" parameterType="CarCar" resultMap="CarCarResult">
+        <include refid="selectCarCarVo"/>
+        <where>
+            <if test="userId != null ">and cc.user_id = #{userId}</if>
+            <if test="carUser != null and carUser.nickname != null and carUser.nickname != ''">and cu.nickname like concat('%', #{carUser.nickname}, '%')</if>
+            <if test="carName != null  and carName != ''">and cc.car_name like concat('%', #{carName}, '%')</if>
+            <if test="carNumber != null  and carNumber != ''">and cc.car_number like concat('%', #{carNumber}, '%')</if>
+            <if test="status != null  and status != ''">and cc.status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectCarCarByCarId" parameterType="Long" resultMap="CarCarResult">
+        <include refid="selectCarCarVo"/>
+        where cc.car_id = #{carId}
+    </select>
+
+    <insert id="insertCarCar" parameterType="CarCar" useGeneratedKeys="true" keyProperty="carId">
+        insert into car_car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="parkinglotId != null">parkinglot_id,</if>
+            <if test="carName != null">car_name,</if>
+            <if test="carNumber != null">car_number,</if>
+            <if test="photo != null">photo,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="parkinglotId != null">#{parkinglotId},</if>
+            <if test="carName != null">#{carName},</if>
+            <if test="carNumber != null">#{carNumber},</if>
+            <if test="photo != null">#{photo},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCarCar" parameterType="CarCar">
+        update car_car
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="parkinglotId != null">parkinglot_id = #{parkinglotId},</if>
+            <if test="carName != null">car_name = #{carName},</if>
+            <if test="carNumber != null">car_number = #{carNumber},</if>
+            <if test="photo != null">photo = #{photo},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where car_id = #{carId}
+    </update>
+
+    <delete id="deleteCarCarByCarId" parameterType="Long">
+        delete
+        from car_car
+        where car_id = #{carId}
+    </delete>
+
+    <delete id="deleteCarCarByCarIds" parameterType="String">
+        delete from car_car where car_id in
+        <foreach item="carId" collection="array" open="(" separator="," close=")">
+            #{carId}
+        </foreach>
+    </delete>
+</mapper>

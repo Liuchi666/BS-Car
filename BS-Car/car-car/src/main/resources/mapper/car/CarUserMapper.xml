@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.car.mapper.CarUserMapper">
+
+    <resultMap type="CarUser" id="CarUserResult">
+        <result property="userId"    column="user_id"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="sex"    column="sex"    />
+        <result property="age"    column="age"    />
+        <result property="phone"    column="phone"    />
+        <result property="isDisabled"    column="is_disabled"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="openid"    column="openid"    />
+        <result property="password"    column="password"    />
+        <result property="sign"    column="sign"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectCarUserVo">
+        select user_id, avatar, nickname, sex, age, phone, is_disabled, create_time, openid, password, sign, is_deleted, create_by, update_by, update_time, remark from car_user
+    </sql>
+
+    <select id="selectCarUserList" parameterType="CarUser" resultMap="CarUserResult">
+        <include refid="selectCarUserVo"/>
+        <where>
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="isDisabled != null  and isDisabled != ''"> and is_disabled = #{isDisabled}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectCarUserByUserId" parameterType="Long" resultMap="CarUserResult">
+        <include refid="selectCarUserVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <!--根据用户名查看用户是否存在-->
+    <select id="selectCarUserByNickname" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from car_user where nickname = #{nickname}
+    </select>
+    <!--根据手机号查看用户是否存在-->
+    <select id="selectCarUserByPhone" resultType="java.lang.Integer" parameterType="string">
+        select count(*) from car_user where phone = #{phone}
+    </select>
+    <!--根据手机号查看用户是否存在-->
+    <select id="selectUserInfoByPhone" resultMap="CarUserResult" parameterType="string">
+        <include refid="selectCarUserVo"/>
+        where phone = #{phone}
+    </select>
+    <!--根据用户昵称获取完整用户信息-->
+    <select id="getUserInfoByName" resultMap="CarUserResult">
+        <include refid="selectCarUserVo"/>
+        where nickname = #{nickname}
+    </select>
+
+    <insert id="insertCarUser" parameterType="CarUser" useGeneratedKeys="true" keyProperty="userId">
+        insert into car_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="avatar != null">avatar,</if>
+            <if test="nickname != null and nickname != ''">nickname,</if>
+            <if test="sex != null">sex,</if>
+            <if test="age != null">age,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="isDisabled != null">is_disabled,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="openid != null">openid,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="sign != null">sign,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="avatar != null">#{avatar},</if>
+            <if test="nickname != null and nickname != ''">#{nickname},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="age != null">#{age},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="isDisabled != null">#{isDisabled},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="openid != null">#{openid},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="sign != null">#{sign},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCarUser" parameterType="CarUser">
+        update car_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="nickname != null and nickname != ''">nickname = #{nickname},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="isDisabled != null">is_disabled = #{isDisabled},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="openid != null">openid = #{openid},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="sign != null">sign = #{sign},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <!--根据用户id修改用户密码-->
+    <update id="updatePwdById">
+        update car_user set password = #{password} where user_id = #{userId}
+    </update>
+    <!--根据用户id修改用户头像-->
+    <update id="updateAvatarByUserId">
+        update car_user set avatar = #{avatar} where user_id = #{userId}
+    </update>
+
+    <delete id="deleteCarUserByUserId" parameterType="Long">
+        delete from car_user where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteCarUserByUserIds" parameterType="String">
+        delete from car_user where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+</mapper>

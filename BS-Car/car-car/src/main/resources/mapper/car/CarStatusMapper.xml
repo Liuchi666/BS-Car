@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.car.mapper.CarStatusMapper">
+
+    <!--获取车位状态的-->
+    <sql id="getParkinglotStatusCount">
+        select count(*) from car_parkinglot
+    </sql>
+    <!--获取车辆状态的-->
+    <sql id="getCarStatusCount">
+        select count(*) from car_car
+    </sql>
+
+
+    <select id="getUse" parameterType="string" resultType="java.lang.Integer">
+        <include refid="getParkinglotStatusCount" />
+        where carpark_id = #{carparkId} AND status = 1
+    </select>
+
+    <select id="getGood" parameterType="string" resultType="java.lang.Integer">
+        <include refid="getParkinglotStatusCount" />
+        where carpark_id = #{carparkId} AND status = 0
+    </select>
+
+    <select id="getBad" parameterType="string" resultType="java.lang.Integer">
+        <include refid="getParkinglotStatusCount" />
+        where carpark_id = #{carparkId} AND status = 2
+    </select>
+<!--==============华丽的分割线(以上是车位状态的sql，以下是车辆状态的sql)==================-->
+    <select id="getUnused" resultType="java.lang.Integer">
+        <include refid="getCarStatusCount"/>
+        where status = 0
+    </select>
+    <select id="getUsed" resultType="java.lang.Integer">
+        <include refid="getCarStatusCount"/>
+        where status = 1
+    </select>
+    <select id="getDamaged" resultType="java.lang.Integer">
+        <include refid="getCarStatusCount"/>
+        where status = 2
+    </select>
+    <select id="getRepair" resultType="java.lang.Integer">
+        <include refid="getCarStatusCount"/>
+        where status = 3
+    </select>
+    <select id="getLocationBad" resultType="java.lang.Integer">
+        <include refid="getCarStatusCount"/>
+        where status = 4
+    </select>
+    <select id="getPaymentBad" resultType="java.lang.Integer">
+        <include refid="getCarStatusCount"/>
+        where status = 5
+    </select>
+</mapper>
