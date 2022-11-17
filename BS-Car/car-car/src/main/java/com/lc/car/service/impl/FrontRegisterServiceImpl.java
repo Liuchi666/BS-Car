@@ -54,7 +54,7 @@ public class FrontRegisterServiceImpl implements FrontRegisterService {
              * CAM密匙查询: https://console.cloud.tencent.com/cam/capi*/
             /**  密钥 */
             Credential cred =
-                    new Credential("AKIDb7UhjbKsGXd7OUPDqKdjdPzNJ4f4zkLk", "DJJCtPwLYa7Xu8A1jLm4DF6lHpHblohP");
+                    new Credential("XXX", "XXX");
 
             // 实例化一个http选项，可选，没有特殊需求可以跳过
             HttpProfile httpProfile = new HttpProfile();
@@ -96,7 +96,7 @@ public class FrontRegisterServiceImpl implements FrontRegisterService {
 
             /* 短信应用ID: 短信SdkAppId在 [短信控制台] 添加应用后生成的实际SdkAppId，示例如1400006666 */
             /** 在腾讯云官网-> 短信控制台 -> 应用管理 -> 应用列表中查看  */
-            String sdkAppId = "1400718586";
+            String sdkAppId = "XXX";
             request.setSmsSdkAppId(sdkAppId);
 
             /** 短信签名内容: 使用 UTF-8 编码，必须填写已审核通过的签名，签名信息可登录 [短信控制台]->签名管理 查看 */
@@ -116,7 +116,7 @@ public class FrontRegisterServiceImpl implements FrontRegisterService {
             request.setExtendCode(extendCode);
 
             /** 模板 ID: 必须填写已审核通过的模板 ID。模板ID可登录 [短信控制台]->正文模板管理 查看 */
-            String templateId = "1503120";
+            String templateId = "XXX";
             request.setTemplateId(templateId);
 
             /* 下发手机号码，采用 E.164 标准，+[国家或地区码][手机号]
